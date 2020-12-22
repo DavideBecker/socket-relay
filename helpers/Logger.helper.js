@@ -1,12 +1,12 @@
 var chalk = require("chalk");
 
 class Logger {
-  static connected({ socket, namespace }) {
+  static connected({ socket }) {
     console.log(
       chalk.green("client"),
       chalk.yellow(socket.id),
       chalk.green("connected to"),
-      chalk.cyan(namespace.name)
+      chalk.cyan(socket.nsp.name)
     );
   }
 
@@ -20,15 +20,14 @@ class Logger {
     console.log("");
   }
 
-  static messageEvent({ socket, evt, msg, namespace }) {
+  static messageEvent({ socket, evt, msg }) {
     console.log(
       chalk.yellow(socket.id),
       "sent",
       evt,
       "with data",
       msg,
-      "to namespace",
-      chalk.cyan(namespace.name)
+      chalk.cyan(socket.nsp.name)
     );
   }
 }

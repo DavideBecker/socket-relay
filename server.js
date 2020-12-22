@@ -14,13 +14,13 @@ const port = process.env.PORT || 3000;
 //   res.sendFile(__dirname + "/examples/second-namespace.html");
 // });
 
+// Allow all connections
+io.set("origins", "*:*");
+
 // Listen to all namespaces
 io.of(/.*/).on("connection", function (socket) {
-  // Get the namespace of the current client
-  const namespace = socket.nsp;
-
   // Connection log message
-  Logger.connected({ socket, namespace });
+  Logger.connected({ socket });
 
   // Listen to all socket events
   socket.onAny((event, ...args) => {
@@ -31,7 +31,7 @@ io.of(/.*/).on("connection", function (socket) {
       const msg = args;
 
       // Log the event in the console
-      Logger.messageEvent({ socket, evt, msg, namespace });
+      Logger.messageEvent({ socket, evt, msg });
 
       // Emit the event to all other clients
       socket.broadcast.emit(evt, msg);
