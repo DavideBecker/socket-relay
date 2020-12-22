@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>socket-relay client example</title>
+    <script src="http://localhost:3000/socket.io/socket.io.min.js"></script>
+    <script>
+      // Connect to namespace
+      const socket = io("/test");
+
+      socket.on("connect", () => {
+        // Send a test event with your own ID
+        socket.send("test", socket.id);
+        console.log("client connected", socket.id);
+      });
+
+      // Open another window and the first window should receive the ID of the 2nd one
+      socket.on("test", (msg) => {
+        console.log("received", msg);
+      });
+
+      socket.on("disconnect", () => {
+        console.log("client disconnected", socket.id);
+      });
+    </script>
+  </head>
+  <body></body>
+</html>
