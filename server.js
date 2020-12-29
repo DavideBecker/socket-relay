@@ -1,10 +1,19 @@
+// TODO: Remove for staging or prod
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+const fs = require("fs");
 const app = require("express")();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
 const Logger = require("./helpers/Logger.helper");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8337;
 
 // Uncomment this to test it locally
 // app.get("/test", function (req, res) {
@@ -13,9 +22,6 @@ const port = process.env.PORT || 3000;
 // app.get("/second", function (req, res) {
 //   res.sendFile(__dirname + "/examples/second-namespace.html");
 // });
-
-// Allow all connections
-io.set("origins", "*:*");
 
 // Listen to all namespaces
 io.of(/.*/).on("connection", function (socket) {
@@ -44,8 +50,12 @@ io.of(/.*/).on("connection", function (socket) {
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 // Start server
-http.listen(port, function () {
+server.listen(port, function () {
   console.log("listening on *:" + port);
   console.log("");
 });
